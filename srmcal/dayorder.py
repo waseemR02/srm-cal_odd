@@ -1,6 +1,5 @@
 from enum import Enum
 from collections import namedtuple
-import caldav
 from datetime import datetime, time
 
 class DayOrder(Enum):
