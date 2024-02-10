@@ -30,16 +30,17 @@ time_slots = (
 
 assert(len(time_slots) == len(even_slots[DayOrder.One]))
 class DayOrderSched():
-    def __init__(self, do: DayOrder, sched: dict):
+    def __init__(self, do: DayOrder, sched: dict, time_zone = "Asia/Kolkata"):
         self.day_order = do
         self.slots = even_slots[self.day_order]
         self.times = time_slots
         self.sched = sched
+        self.time_zone = time_zone
     def add_events(self, day: datetime):
         events = []
         for t,s in zip(self.times, self.slots):
             if not s in self.sched:
                 continue
-            events.append({"summary": self.sched[s].name, "start": { "dateTime": datetime.combine(
-                day, t.start)}, "end": {"dateTime": datetime.combine(day, t.end)}, "location": self.sched[s].location})
+            events.append({"summary": self.sched[s]['name'], "start": { "dateTime": datetime.combine(
+                day, t.start).isoformat(), "timeZone": self.time_zone}, "end": {"dateTime": datetime.combine(day, t.end).isoformat(), "timeZone": self.time_zone}, "location": self.sched[s]['location']})
         return events
