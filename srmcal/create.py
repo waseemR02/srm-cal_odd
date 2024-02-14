@@ -4,6 +4,7 @@ import datetime
 import os.path
 import pickle
 import sys
+import argparse
 
 import srmcal.dayorder as do
 
@@ -25,7 +26,7 @@ def create_calendar(service, calendar_name):
     }
     created_calendar = service.calendars().insert(body=calendar).execute()
     return created_calendar
-def main():
+def main(batch: str, pkl: str):
     creds = None
     if os.path.exists('token.json'):
         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
@@ -43,14 +44,14 @@ def main():
     try:
         service = build('calendar', 'v3', credentials=creds)
         calendar = create_calendar(service, calendar_name)
-        with open(sys.argv[1], 'rb') as f:
+        with open(pkl, 'rb') as f:
             dayorders, courses = pickle.load(f)
         do_sched = {
-            do.DayOrder.One: do.DayOrderSched(do.DayOrder.One, courses),
-            do.DayOrder.Two: do.DayOrderSched(do.DayOrder.Two, courses),
-            do.DayOrder.Three: do.DayOrderSched(do.DayOrder.Three, courses),
-            do.DayOrder.Four: do.DayOrderSched(do.DayOrder.Four, courses),
-            do.DayOrder.Five: do.DayOrderSched(do.DayOrder.Five, courses)
+            do.DayOrder.One: do.DayOrderSched(do.DayOrder.One, courses, batch),
+            do.DayOrder.Two: do.DayOrderSched(do.DayOrder.Two, courses, batch),
+            do.DayOrder.Three: do.DayOrderSched(do.DayOrder.Three, courses, batch),
+            do.DayOrder.Four: do.DayOrderSched(do.DayOrder.Four, courses, batch),
+            do.DayOrder.Five: do.DayOrderSched(do.DayOrder.Five, courses, batch)
         }
         # breakpoint()
         for day in dayorders.keys():
@@ -64,5 +65,10 @@ def main():
         print('An error occurred: %s' % error)
   
 if __name__ == '__main__':
-    main()
+    ap = argparse.ArgumentParser(description="Create a calendar for the semester's schedule")
+    ap.add_argument("batch",type=str, help="batch: odd or even")
+    ap.add_argument("pickle", help="path to pickle file containing dayorders and courses")
+    args = vars(ap.parse_args())
+
+    main(args["batch"], args["pickle"])
 
