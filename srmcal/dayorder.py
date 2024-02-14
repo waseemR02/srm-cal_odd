@@ -22,6 +22,13 @@ even_slots[DayOrder.Three] = "P21,P22,P23,P24,P25,C,C,A,D,B,L31,L32".split(',')
 even_slots[DayOrder.Four] = "D,D,B,E,C,P36,P37,P38,P39,P40,L41,L42".split(',')
 even_slots[DayOrder.Five] = "P41,P42,P43,P44,P45,E,E,C,F,D,L51,L52".split(',')
 
+odd_slots = dict()
+odd_slots[DayOrder.One] = "A,A,F,F,G,P6,P7,P8,P9,P10,L11,L12".split(',')
+odd_slots[DayOrder.Two] = "P11,P12,P13,P14,P15,B,B,G,G,A,L21,L22".split(',')
+odd_slots[DayOrder.Three] = "C,C,A,D,B,P26,P27,P28,P29,P30,L31,L32".split(',')
+odd_slots[DayOrder.Four] = "P31,P32,P33,P34,P35,D,D,B,E,C,L41,L42".split(',')
+odd_slots[DayOrder.Five] = "E,E,C,F,D,P46,P47,P48,P49,P50,L51,L52".split(',')
+
 TimeSlot = namedtuple("TimeSlot", ["start", "end"])
 time_slots = (
     TimeSlot(time(8, 00), time(8, 50)), TimeSlot(time(8, 50), time(9, 40)), TimeSlot(time(9, 45), time(10, 35)), TimeSlot(time(10, 40), time(11, 30)), TimeSlot(time(11, 35), time(12, 25)), TimeSlot(time(12, 30), time(13, 20)), TimeSlot(
@@ -30,9 +37,12 @@ time_slots = (
 
 assert(len(time_slots) == len(even_slots[DayOrder.One]))
 class DayOrderSched():
-    def __init__(self, do: DayOrder, sched: dict, time_zone = "Asia/Kolkata"):
+    def __init__(self, do: DayOrder, sched: dict, batch: str, time_zone = "Asia/Kolkata"):
         self.day_order = do
-        self.slots = even_slots[self.day_order]
+        if batch == "even":
+            self.slots = even_slots[self.day_order]
+        else:
+            self.slots = odd_slots[self.day_order]
         self.times = time_slots
         self.sched = sched
         self.time_zone = time_zone
