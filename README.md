@@ -13,7 +13,7 @@ To install the required dependencies, follow these steps:
     pip install -r requirements.txt
 ```
 ## Usage
-To use the project, you need 
+To use the project, you need
 1. Download the single html file of your timetable from the SRMIST Student Portal.
 2. Download the academic plan from the SRMIST Student Portal.
 > Note: Be sure to check if the downloaded html loads properly in a browser. If it doesn't, use single-file extension in your browser to save the html file.
