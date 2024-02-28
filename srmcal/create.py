@@ -19,8 +19,6 @@ SCOPES = [
     "https://www.googleapis.com/auth/calendar.events",
 ]
 
-calendar_name = "6Sem_Theory"
-
 
 def create_calendar(service, calendar_name):
     calendar = {"summary": calendar_name, "timeZone": "Asia/Kolkata"}
@@ -28,7 +26,7 @@ def create_calendar(service, calendar_name):
     return created_calendar
 
 
-def main(batch: str, pkl: str):
+def main(batch: str, pkl: str, calendar_name: str = "6Sem_Theory"):
     creds = None
     if os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
@@ -73,6 +71,7 @@ if __name__ == "__main__":
     ap.add_argument(
         "pickle", help="path to pickle file containing dayorders and courses"
     )
+    ap.add_argument("--cal", type=str, help="title of the calendar")
     args = vars(ap.parse_args())
 
     main(args["batch"], args["pickle"])

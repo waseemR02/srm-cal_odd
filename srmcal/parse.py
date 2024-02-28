@@ -44,6 +44,7 @@ def main(plan: str = "302_plan.html", timetable: str = "timetable.html") -> None
             "18CSP104L",
             "18CSP105L",
             "18CSC307L",
+            "18CSP104L",
             "Course Code",
         ]
     )
