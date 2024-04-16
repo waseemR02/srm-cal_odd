@@ -38,13 +38,8 @@ def delete_calendar(service, calendar_id, time_min, time_max):
             break
     return calendar
 
-def main(batch: str, pkl: str):
+def main(batch: str, pkl: str, time_min, time_max, calendar_id):
     creds = None
-    # time_min = datetime(2024, 3, 25).replace(tzinfo=tz.gettz("Asia/Kolkata"))
-    # time_max = datetime(2024, 6, 1).replace(tzinfo=tz.gettz("Asia/Kolkata"))
-    time_min = datetime(2024, 3, 25)
-    time_max = datetime(2024, 6, 1)
-    calendar_id = "1add9d7b0a6ec8495f54c4fec31ecc9779faad5ebf57fdbb1c35bddba9c43cc4@group.calendar.google.com"
     if os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
 
@@ -88,6 +83,16 @@ if __name__ == "__main__":
     ap.add_argument(
         "pickle", help="path to pickle file containing dayorders and courses"
     )
+    ap.add_argument(
+        "start_time", help="Day from which to change the calendar"
+    )
+    ap.add_argument(
+        "end_time", help="Day upto which to change the calendar"
+    )
+    ap.add_argument(
+        "calendar_id", help="Calendar ID to modify"
+    )
     args = vars(ap.parse_args())
 
-    main(args["batch"], args["pickle"])
+    main(args["batch"], args["pickle"], datetime.fromisoformat(
+        args["start_time"]), datetime.fromisoformat(args["end_time"]), args["calendar_id"])
