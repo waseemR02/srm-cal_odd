@@ -38,7 +38,7 @@ def delete_calendar(service, calendar_id, time_min, time_max):
             break
     return calendar
 
-def main(batch: str, pkl: str, time_min, time_max, calendar_id):
+def main(batch: str, pkl: str, time_min, time_max, calendar_id, delete_only=False):
     creds = None
     if os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
@@ -65,6 +65,8 @@ def main(batch: str, pkl: str, time_min, time_max, calendar_id):
             do.DayOrder.Five: do.DayOrderSched(do.DayOrder.Five, courses, batch),
         }
         # breakpoint()
+        if delete_only:
+            return
         for day in filter(lambda x: x >= time_min and x < time_max, dayorders.keys()):
             order = dayorders[day]
             events = do_sched[order].add_events(day.astimezone())
@@ -92,7 +94,9 @@ if __name__ == "__main__":
     ap.add_argument(
         "calendar_id", help="Calendar ID to modify"
     )
+    ap.add_argument("--delete-only", "-d", action="store_true", help="Don't update, just delete the events in the duration")
     args = vars(ap.parse_args())
 
+    breakpoint()
     main(args["batch"], args["pickle"], datetime.fromisoformat(
-        args["start_time"]), datetime.fromisoformat(args["end_time"]), args["calendar_id"])
+        args["start_time"]), datetime.fromisoformat(args["end_time"]), args["calendar_id"], args["delete_only"])
